@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+<div class="admin-container">
+    <h2>Редагувати тип одягу</h2>
+    <form action="/admin/garments/update/<%= garment.id %>" method="POST">
+        <div class="mb-3">
+            <label class="form-label">Назва</label>
+            <input type="text" name="name" class="form-control" value="<%= garment.name %>" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Шлях до картинки</label>
+            <input type="text" name="image" class="form-control" value="<%= garment.image || '' %>" placeholder="/images/garment-...">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Необхідні мірки</label>
+            <div>
+                <% Object.keys(details_library).forEach(key => { %>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="required_final_details" value="<%= key %>" id="check_<%= key %>"
+                                <%= (garment.required_final_details || []).includes(key) ? 'checked' : '' %>>
+                        <label class="form-check-label" for="check_<%= key %>"><%= details_library[key].label %></label>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Оновити</button>
+        <a href="/admin/garments" class="btn btn-secondary">Скасувати</a>
+    </form>
+</div>
+<%- include('partials/footer') %>

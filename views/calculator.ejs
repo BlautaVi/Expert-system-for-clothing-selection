@@ -1,0 +1,205 @@
+<%- include('partials/header') %>
+
+<div class="wizard-container" id="wizard">
+    <div class="text-center">
+        <div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    let firstQuestion = null;
+    try {
+        firstQuestion = JSON.parse(`<%- JSON.stringify(firstQuestion || null) %>`);
+    } catch (e) {
+        console.error("Критична помилка: Не вдалося завантажити початкові дані.", e);
+    }
+
+    const wizardState = {
+        currentQuestion: firstQuestion,
+        answers: {},
+        totalQuestions: 10
+    };
+
+    const wizardContainer = document.getElementById('wizard');
+
+    function renderStep() {
+        if (!wizardState.currentQuestion) {
+            wizardContainer.innerHTML = `<div class="alert alert-danger"><strong>Помилка!</strong> Не вдалося завантажити крок.</div>`;
+            return;
+        }
+
+        wizardContainer.innerHTML = '';
+        const stepElement = document.createElement('div');
+        stepElement.className = 'step-content';
+
+        const { id, text, answers, is_form, form_fields } = wizardState.currentQuestion;
+
+        const currentStepNumber = Object.keys(wizardState.answers).length;
+        const progress = Math.min((currentStepNumber / wizardState.totalQuestions) * 100, 100);
+
+        let content = `<div class="progress mb-4" style="height: 10px;"><div class="progress-bar" role="progressbar" style="width: ${progress}%"></div></div><h3 class="mb-4">${text}</h3>`;
+        const answersContainer = document.createElement('div');
+
+        if (is_form) {
+            (form_fields || []).forEach(field => {
+                let fieldHtml;
+                if (field.type === 'select') {
+                    const optionsHtml = field.options.map(opt => `<option value="${opt.toLowerCase()}">${opt}</option>`).join('');
+                    fieldHtml = `<select id="${field.name}" class="form-select form-select-lg">${optionsHtml}</select>`;
+                } else {
+                    fieldHtml = `<input type="${field.type}" id="${field.name}" class="form-control form-control-lg" required placeholder="${field.placeholder || ''}">`;
+                }
+                answersContainer.innerHTML += `<div class="mb-3"><label class="form-label fw-bold">${field.label}:</label>${fieldHtml}</div>`;
+            });
+
+            const buttonText = wizardState.currentQuestion.triggers_result ? 'Отримати результат' : 'Далі';
+            const buttonAction = wizardState.currentQuestion.triggers_result ? 'handleFinalCalculation()' : 'handleFormSubmit()';
+            answersContainer.innerHTML += `<button class="btn btn-primary w-100 btn-lg mt-3" onclick="${buttonAction}">${buttonText}</button>`;
+        } else if (answers) {
+            const hasImages = answers.some(a => a.image);
+            if (hasImages) {
+                const row = document.createElement('div');
+                row.className = 'row g-3';
+                answers.forEach(answer => {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-6';
+                    col.innerHTML = `
+                        <div class="card answer-card h-100" onclick="handleAnswer('${wizardState.currentQuestion.answer_key}', '${answer.value}')">
+                            <img src="${answer.image}" class="card-img-top" alt="${answer.text}">
+                            <div class="card-body text-center d-flex align-items-center justify-content-center">
+                                <h5 class="card-title mb-0">${answer.text}</h5>
+                            </div>
+                        </div>
+                    `;
+                    row.appendChild(col);
+                });
+                answersContainer.appendChild(row);
+            } else {
+                answers.forEach(answer => {
+                    const button = document.createElement('button');
+                    button.className = 'btn answer-btn';
+                    button.textContent = answer.text;
+                    button.onclick = () => handleAnswer(wizardState.currentQuestion.answer_key, answer.value);
+                    answersContainer.appendChild(button);
+                });
+            }
+        }
+
+        stepElement.innerHTML = content;
+        stepElement.appendChild(answersContainer);
+        wizardContainer.appendChild(stepElement);
+    }
+
+    async function getNextStepFromServer(currentQuestionId) {
+        try {
+            const response = await fetch('/get-next-step', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ answers: wizardState.answers, currentQuestionId })
+            });
+            if (!response.ok) {
+                console.error('Сервер повернув помилку:', await response.json());
+                return null;
+            }
+            return await response.json();
+        } catch (err) {
+            console.error('Помилка мережі:', err);
+            return null;
+        }
+    }
+
+    async function handleAnswer(key, value) {
+        wizardState.answers[key] = value;
+        const data = await getNextStepFromServer(wizardState.currentQuestion.id);
+        if (data && data.nextQuestion) {
+            wizardState.currentQuestion = data.nextQuestion;
+            renderStep();
+        }
+    }
+
+    async function handleFormSubmit() {
+        wizardState.currentQuestion.form_fields.forEach(field => {
+            const element = document.getElementById(field.name);
+            if (element) {
+                wizardState.answers[field.name] = element.value;
+            }
+        });
+        const data = await getNextStepFromServer(wizardState.currentQuestion.id);
+        if (data && data.nextQuestion) {
+            wizardState.currentQuestion = data.nextQuestion;
+            renderStep();
+        }
+    }
+
+    async function handleFinalCalculation() {
+        if (wizardState.currentQuestion.form_fields) {
+            wizardState.currentQuestion.form_fields.forEach(field => {
+                const element = document.getElementById(field.name);
+                if (element) {
+                    wizardState.answers[field.name] = element.value;
+                }
+            });
+        }
+
+        wizardContainer.innerHTML = `<div class="text-center"><div class="spinner-border text-success"></div><p class="mt-2">Аналізуємо ваші відповіді...</p></div>`;
+
+        try {
+            const response = await fetch('/calculate-final', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(wizardState.answers)
+            });
+            const result = await response.json();
+            renderResult(result);
+        } catch (err) {
+            console.error('Помилка фінального розрахунку:', err);
+            renderResult({ error: 'Не вдалося зв\'язатися з сервером.' });
+        }
+    }
+
+    function renderResult(result) {
+        wizardContainer.innerHTML = '';
+        const resultElement = document.createElement('div');
+        resultElement.className = 'step-content';
+
+        if (result && result.error) {
+            resultElement.innerHTML = `
+                <div class="text-center">
+                    <h3 class="text-danger"><i class="fas fa-exclamation-triangle"></i> Не вдалося знайти варіанти</h3>
+                    <p class="lead">${result.error}</p>
+                </div>`;
+        } else if (result && result.results) {
+            const resultsHtml = result.results.map(res => `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">${res.name}</h5>
+                        <p class="card-text mb-1">
+                            <strong>Необхідна кількість тканини:</strong>
+                            <span class="badge bg-success fs-6">${res.consumption} м</span>
+                        </p>
+                        <p class="card-text">
+                            <strong>Орієнтовна вартість тканини:</strong>
+                            <span class="badge bg-primary fs-6">${res.cost} грн</span>
+                        </p>
+                    </div>
+                </div>
+            `).join('');
+
+            resultElement.innerHTML = `
+                <div class="text-center">
+                    <h3><i class="fas fa-receipt text-success"></i> Ваш розрахунок для: ${result.garmentName}</h3>
+                    <p class="lead">На основі ваших відповідей, ми підготували наступні рекомендації:</p>
+                </div>
+                <div class="mt-4">${resultsHtml}</div>`;
+        }
+
+        resultElement.innerHTML += `<div class="text-center"><button class="btn btn-secondary mt-4" onclick="location.reload()">Почати заново</button></div>`;
+        wizardContainer.appendChild(resultElement);
+    }
+
+    document.addEventListener('DOMContentLoaded', renderStep);
+</script>
+
+<%- include('partials/footer') %>

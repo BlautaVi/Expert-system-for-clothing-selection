@@ -1,0 +1,12 @@
+<%- include('partials/header') %>
+<div class="admin-container">
+    <h2>Редагувати правило</h2>
+    <form action="/admin/rules/update/<%= rule.id %>" method="POST">
+        <select name="factor" class="form-select">
+            <option value="height" <%= rule.factor === 'height' ? 'selected' : '' %>>Зріст</option>
+        </select>
+        <button type="submit" class="btn btn-success">Оновити правило</button>
+        <a href="/admin/rules" class="btn btn-secondary">Скасувати</a>
+    </form>
+</div>
+<%- include('partials/footer') %>

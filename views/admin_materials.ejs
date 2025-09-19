@@ -1,0 +1,57 @@
+<%- include('partials/header') %>
+<div class="admin-container">
+    <h2>Керування матеріалами</h2>
+
+    <div class="card p-4 mb-4">
+        <h4>Додати новий матеріал</h4>
+        <form action="/admin/materials/add" method="POST">
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <label class="form-label">Назва матеріалу</label>
+                    <input type="text" name="name" class="form-control" placeholder="Напр. Шовк" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Ціна за метр, грн</label>
+                    <input type="number" name="price_per_meter" class="form-control" placeholder="напр. 250" required>
+                </div>
+            </div>
+
+            <h5>Властивості</h5>
+            <div id="properties-container"></div>
+
+            <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="addProperty()">+ Додати властивість</button>
+            <button type="submit" class="btn btn-success mt-3 d-block">Зберегти матеріал</button>
+        </form>
+    </div>
+
+    <table class="table table-bordered">
+        <thead><tr><th>Назва</th><th>Ціна</th><th>Властивості</th><th>Дії</th></tr></thead>
+        <tbody>
+        <% (materials || []).forEach(m => { %>
+            <tr>
+                <td><%= m.name %></td>
+                <td><%= m.price_per_meter %> грн</td>
+                <td>
+                    <ul><% (m.properties || []).forEach(p => { %><li><strong><%= p.key %>:</strong> <%= p.value %></li><% }); %></ul>
+                </td>
+                <td>
+                    <form action="/admin/materials/delete/<%= m.id %>" method="POST">
+                        <button type="submit" class="btn btn-danger btn-sm">Видалити</button>
+                    </form>
+                </td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+    <script>
+        function addProperty() {
+            const container = document.getElementById('properties-container');
+            const newProperty = document.createElement('div');
+            newProperty.classList.add('row', 'g-3', 'mb-2');
+            newProperty.innerHTML = `<div class="col-md-5"><input type="text" name="keys" class="form-control" placeholder="Ключ, напр. сезон" required></div><div class="col-md-5"><input type="text" name="values" class="form-control" placeholder="Значення, напр. літо" required></div><div class="col-md-2"><button type="button" class="btn btn-outline-danger" onclick="this.parentElement.parentElement.remove()">Видалити</button></div>`;
+            container.appendChild(newProperty);
+        }
+        addProperty();
+    </script>
+</div>
+<%- include('partials/footer') %>

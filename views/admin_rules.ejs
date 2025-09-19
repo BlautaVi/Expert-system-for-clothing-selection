@@ -1,0 +1,44 @@
+<div class="col-md-3">
+    <label class="form-label">Фактор</label>
+    <select name="factor" id="factorSelector" class="form-select">
+    </select>
+</div>
+<div class="col-md-3" id="valueContainer">
+    <label class="form-label">Значення</label>
+    <input type="text" name="value" class="form-control" required>
+</div>
+<td>
+    <a href="/admin/rules/edit/<%= r.id %>" class="btn btn-primary btn-sm">Редагувати</a>
+    <form action="/admin/rules/delete/<%= r.id %>" method="POST" style="display:inline;">
+        <button type="submit" class="btn btn-danger btn-sm">Видалити</button>
+    </form>
+</td>
+<script>
+    const dbData = JSON.parse(`<%- JSON.stringify(db) %>`);
+    const factorSelector = document.getElementById('factorSelector');
+    const valueContainer = document.getElementById('valueContainer');
+
+    const valueMap = {
+        fit: [...new Set(dbData.garments.flatMap(g => g.available_fits.map(f => f.name)))],
+        sleeve: [...new Set(dbData.questions.sleeve_type.answers.map(a => a.value))],
+        length: [...new Set(dbData.questions.dress_length.answers.map(a => a.value))],
+        print_matching: ['так', 'ні'],
+        has_complex_elements: ['так', 'ні']
+    };
+
+    function updateValueInput() {
+        const selectedFactor = factorSelector.value;
+        let inputHtml = '<label class="form-label">Значення</label>';
+
+        if (valueMap[selectedFactor]) {
+            const options = valueMap[selectedFactor].map(val => `<option value="${val}">${val}</option>`).join('');
+            inputHtml += `<select name="value" class="form-select" required>${options}</select>`;
+        } else {
+            inputHtml += `<input type="number" name="value" class="form-control" required>`;
+        }
+        valueContainer.innerHTML = inputHtml;
+    }
+
+    factorSelector.addEventListener('change', updateValueInput);
+    updateValueInput();
+</script>
