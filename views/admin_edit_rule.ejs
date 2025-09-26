@@ -1,12 +1,90 @@
 <%- include('partials/header') %>
 <div class="admin-container">
     <h2>Редагувати правило</h2>
-    <form action="/admin/rules/update/<%= rule.id %>" method="POST">
-        <select name="factor" class="form-select">
-            <option value="height" <%= rule.factor === 'height' ? 'selected' : '' %>>Зріст</option>
-        </select>
-        <button type="submit" class="btn btn-success">Оновити правило</button>
-        <a href="/admin/rules" class="btn btn-secondary">Скасувати</a>
+    <form action="/admin/rules/update/<%= rule.id %>" method="POST" class="row g-3">
+        <div class="col-md-12">
+            <label class="form-label">Опис</label>
+            <input type="text" name="description" class="form-control" value="<%= rule.description || '' %>" required>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Фактор</label>
+            <select name="factor" id="factorSelector" class="form-select"></select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Оператор</label>
+            <select name="operator" class="form-select" required>
+                <option value=">" <%= rule.operator === '>' ? 'selected' : '' %>>></option>
+                <option value="===" <%= rule.operator === '===' ? 'selected' : '' %>>===</option>
+                <option value="<" <%= rule.operator === '<' ? 'selected' : '' %>><</option>
+            </select>
+        </div>
+
+        <div class="col-md-3" id="valueContainer">
+            <label class="form-label">Значення</label>
+            <input type="text" name="value" class="form-control" value="<%= rule.value %>" required>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Модифікатор (множник)</label>
+            <input type="number" step="0.01" name="modifier" class="form-control" value="<%= rule.modifier %>" required>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-success">Оновити правило</button>
+            <a href="/admin/rules" class="btn btn-secondary">Скасувати</a>
+        </div>
     </form>
 </div>
+
+<div id="rule-data" data-db='<%- JSON.stringify(db).replace(/'/g, "&#39;").replace(/</g, "\\u003c") %>'></div>
+<script>
+    const dbData = JSON.parse(document.getElementById('rule-data').dataset.db);
+    const factorSelector = document.getElementById('factorSelector');
+    const valueContainer = document.getElementById('valueContainer');
+
+    const valueMap = {
+        fit: [...new Set((dbData.garments || []).flatMap(g => (g.available_fits || []).map(f => f.name)))],
+        sleeve: (dbData.questions && dbData.questions.sleeve_type ? [...new Set(dbData.questions.sleeve_type.answers.map(a => a.value))] : []),
+        length: (dbData.questions && dbData.questions.dress_length ? [...new Set(dbData.questions.dress_length.answers.map(a => a.value))] : []),
+        print_matching: ['так', 'ні'],
+        has_complex_elements: ['так', 'ні']
+    };
+
+    const numericFactors = ['height'];
+
+    function populateFactors() {
+        const current = `<%= rule.factor %>`;
+        const knownFactors = [...new Set([...Object.keys(valueMap), ...numericFactors])];
+        let options = knownFactors.map(f => `<option value="${f}" ${current === f ? 'selected' : ''}>${f}</option>`).join('');
+        if (!knownFactors.includes(current)) {
+            options = `<option value="${current}" selected>${current}</option>` + options;
+        }
+        factorSelector.innerHTML = options;
+    }
+
+    function updateValueInput() {
+        const selectedFactor = factorSelector.value;
+        const currentValue = `<%= String(rule.value) %>`;
+        let inputHtml = '<label class="form-label">Значення</label>';
+
+        if (valueMap[selectedFactor] && valueMap[selectedFactor].length) {
+            const options = valueMap[selectedFactor]
+                .map(val => `<option value="${val}" ${currentValue === String(val) ? 'selected' : ''}>${val}</option>`) 
+                .join('');
+            inputHtml += `<select name="value" class="form-select" required>${options}</select>`;
+        } else {
+            const inputType = numericFactors.includes(selectedFactor) ? 'number' : 'text';
+            const stepAttr = inputType === 'number' ? ' step="0.01"' : '';
+            inputHtml += `<input type="${inputType}" name="value" class="form-control" value="${currentValue}" required${stepAttr}>`;
+        }
+        valueContainer.innerHTML = inputHtml;
+    }
+
+    populateFactors();
+    factorSelector.addEventListener('change', updateValueInput);
+    updateValueInput();
+</script>
+
 <%- include('partials/footer') %>

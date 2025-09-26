@@ -88,6 +88,41 @@ router.post('/materials/add', async (req, res) => {
         res.redirect('/admin/materials');
     } catch(err) { res.status(500).send("Помилка додавання матеріалу"); }
 });
+router.get('/materials/edit/:id', async (req, res) => {
+    try {
+        const db = await dbService.readDb();
+        const material = (db.materials || []).find(m => m.id === req.params.id);
+        if (!material) return res.status(404).send('Матеріал не знайдено');
+        res.render('admin_edit_material', { material });
+    } catch(err) { res.status(500).send("Помилка завантаження матеріалу для редагування"); }
+});
+router.post('/materials/update/:id', async (req, res) => {
+    try {
+        const db = await dbService.readDb();
+        const index = (db.materials || []).findIndex(m => m.id === req.params.id);
+        if (index === -1) return res.status(404).send('Матеріал не знайдено');
+
+        const { name, price_per_meter, keys, values } = req.body;
+        const updatedMaterial = { ...db.materials[index] };
+        updatedMaterial.name = name;
+        updatedMaterial.price_per_meter = parseInt(price_per_meter, 10);
+        updatedMaterial.properties = [];
+
+        if (keys && values) {
+            const keysArray = Array.isArray(keys) ? keys : [keys];
+            const valuesArray = Array.isArray(values) ? values : [values];
+            keysArray.forEach((key, i) => {
+                if (key && valuesArray[i]) {
+                    updatedMaterial.properties.push({ key: key, value: valuesArray[i] });
+                }
+            });
+        }
+
+        db.materials[index] = updatedMaterial;
+        await dbService.writeDb(db);
+        res.redirect('/admin/materials');
+    } catch(err) { res.status(500).send("Помилка оновлення матеріалу"); }
+});
 router.post('/garments/update/:id', async (req, res) => {
     const db = await dbService.readDb();
     const index = db.garments.findIndex(g => g.id === req.params.id);

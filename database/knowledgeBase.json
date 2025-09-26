@@ -1,8 +1,23 @@
 {
   "details_library": {
-    "height": { "name": "height", "label": "Ваш зріст (в см)", "type": "number", "placeholder": "напр. 170" },
-    "bust": { "name": "bust", "label": "Обхват грудей (в см)", "type": "number", "placeholder": "напр. 90" },
-    "hips": { "name": "hips", "label": "Обхват стегон (в см)", "type": "number", "placeholder": "напр. 98" }
+    "height": {
+      "name": "height",
+      "label": "Ваш зріст (в см)",
+      "type": "number",
+      "placeholder": "напр. 170"
+    },
+    "bust": {
+      "name": "bust",
+      "label": "Обхват грудей (в см)",
+      "type": "number",
+      "placeholder": "напр. 90"
+    },
+    "hips": {
+      "name": "hips",
+      "label": "Обхват стегон (в см)",
+      "type": "number",
+      "placeholder": "напр. 98"
+    }
   },
   "questions": {
     "start": {
@@ -11,8 +26,14 @@
       "answer_key": "gender",
       "next_question_id": "garment_type",
       "answers": [
-        { "text": "Для жінки", "value": "жіночий" },
-        { "text": "Для чоловіка", "value": "чоловічий" }
+        {
+          "text": "Для жінки",
+          "value": "жіночий"
+        },
+        {
+          "text": "Для чоловіка",
+          "value": "чоловічий"
+        }
       ]
     },
     "garment_type": {
@@ -35,8 +56,26 @@
       },
       "default_next_question_id": "lining",
       "conditional_next": [
-        { "if_answers": { "garment": ["g-1", "g-3"] }, "then_go_to": "dress_length" },
-        { "if_answers": { "garment": ["g-2", "g-8", "g-6", "g-9"] }, "then_go_to": "sleeve_type" }
+        {
+          "if_answers": {
+            "garment": [
+              "g-1",
+              "g-3"
+            ]
+          },
+          "then_go_to": "dress_length"
+        },
+        {
+          "if_answers": {
+            "garment": [
+              "g-2",
+              "g-8",
+              "g-6",
+              "g-9"
+            ]
+          },
+          "then_go_to": "sleeve_type"
+        }
       ]
     },
     "dress_length": {
@@ -45,9 +84,21 @@
       "answer_key": "length",
       "next_question_id": "lining",
       "answers": [
-        { "text": "Міні (коротка)", "value": "міні","image": "/lenght.jpg" },
-        { "text": "Міді (до коліна або трохи нижче)", "value": "міді", "image": "/lenght.jpg"  },
-        { "text": "Максі (довга)", "value": "максі", "image": "/lenght.jpg"  }
+        {
+          "text": "Міні (коротка)",
+          "value": "міні",
+          "image": "/lenght.jpg"
+        },
+        {
+          "text": "Міді (до коліна або трохи нижче)",
+          "value": "міді",
+          "image": "/lenght.jpg"
+        },
+        {
+          "text": "Максі (довга)",
+          "value": "максі",
+          "image": "/lenght.jpg"
+        }
       ]
     },
     "sleeve_type": {
@@ -56,9 +107,21 @@
       "answer_key": "sleeve",
       "next_question_id": "lining",
       "answers": [
-        { "text": "Без рукавів / Короткий", "value": "короткий", "image": "/lining_type.jpg" },
-        { "text": "Рукав ¾", "value": "3/4", "image": "/lining_type.jpg"  },
-        { "text": "Довгий рукав", "value": "довгий", "image": "/lining_type.jpg"  }
+        {
+          "text": "Без рукавів / Короткий",
+          "value": "короткий",
+          "image": "/lining_type.jpg"
+        },
+        {
+          "text": "Рукав ¾",
+          "value": "3/4",
+          "image": "/lining_type.jpg"
+        },
+        {
+          "text": "Довгий рукав",
+          "value": "довгий",
+          "image": "/lining_type.jpg"
+        }
       ]
     },
     "lining": {
@@ -67,8 +130,14 @@
       "answer_key": "lining",
       "next_question_id": "style_and_season",
       "answers": [
-        { "text": "Так, з підкладкою", "value": "так" },
-        { "text": "Ні, без підкладки", "value": "ні" }
+        {
+          "text": "Так, з підкладкою",
+          "value": "так"
+        },
+        {
+          "text": "Ні, без підкладки",
+          "value": "ні"
+        }
       ]
     },
     "style_and_season": {
@@ -76,8 +145,28 @@
       "text": "Вкажіть стиль та сезон:",
       "is_form": true,
       "form_fields": [
-        { "name": "style", "label": "Стиль", "type": "select", "options": ["повсякденний", "діловий", "вечірній", "спортивний", "бохо"] },
-        { "name": "season", "label": "Сезон", "type": "select", "options": ["літо", "зима", "демісезон"] }
+        {
+          "name": "style",
+          "label": "Стиль",
+          "type": "select",
+          "options": [
+            "повсякденний",
+            "діловий",
+            "вечірній",
+            "спортивний",
+            "бохо"
+          ]
+        },
+        {
+          "name": "season",
+          "label": "Сезон",
+          "type": "select",
+          "options": [
+            "літо",
+            "зима",
+            "демісезон"
+          ]
+        }
       ],
       "next_question_id": "fabric_properties"
     },
@@ -87,9 +176,20 @@
       "answer_key": "stretch",
       "next_question_id": "fabric_print",
       "answers": [
-        { "text": "Хочу еластичну тканину (стрейч)", "value": "так", "image": "/stretch.jpg" },
-        { "text": "Нееластична, стабільна тканина", "value": "ні", "image": "/non_stretch.jpg" },
-        { "text": "Немає значення", "value": "неважливо" }
+        {
+          "text": "Хочу еластичну тканину (стрейч)",
+          "value": "так",
+          "image": "/stretch.jpg"
+        },
+        {
+          "text": "Нееластична, стабільна тканина",
+          "value": "ні",
+          "image": "/non_stretch.jpg"
+        },
+        {
+          "text": "Немає значення",
+          "value": "неважливо"
+        }
       ]
     },
     "fabric_print": {
@@ -98,8 +198,16 @@
       "answer_key": "print_matching",
       "next_question_id": "complexity_details",
       "answers": [
-        { "text": "Так, буде складний візерунок", "value": "так", "image": "/fabric_print.jpg" },
-        { "text": "Ні, однотонна або з простим принтом", "value": "ні", "image": "/monotone.jpg" }
+        {
+          "text": "Так, буде складний візерунок",
+          "value": "так",
+          "image": "/fabric_print.jpg"
+        },
+        {
+          "text": "Ні, однотонна або з простим принтом",
+          "value": "ні",
+          "image": "/monotone.jpg"
+        }
       ]
     },
     "complexity_details": {
@@ -108,8 +216,16 @@
       "answer_key": "has_complex_elements",
       "next_question_id": "final_details",
       "answers": [
-        { "text": "Так (накладні кишені, складний комір, багато деталей)", "value": "так", "image": "/complexity_details.jpg" },
-        { "text": "Ні, модель буде простою", "value": "ні",  "image": "/monotone.jpg" }
+        {
+          "text": "Так (накладні кишені, складний комір, багато деталей)",
+          "value": "так",
+          "image": "/complexity_details.jpg"
+        },
+        {
+          "text": "Ні, модель буде простою",
+          "value": "ні",
+          "image": "/monotone.jpg"
+        }
       ]
     },
     "final_details": {
@@ -121,99 +237,348 @@
     }
   },
   "garments": [
-      {
-        "id": "g-1",
-        "name": "Сукня",
-        "base_consumption": 2.0,
-        "gender": "жіночий",
-        "available_fits": [
-          { "name": "Футляр", "image": "/sheath_dress.jpg" },
-          { "name": "А-силует", "image": "/a_siluet_dress.jpg" }
-        ],
-        "required_final_details": ["height", "bust", "hips"]
-      },
+    {
+      "id": "g-1",
+      "name": "Сукня",
+      "base_consumption": 2,
+      "gender": "жіночий",
+      "available_fits": [
+        {
+          "name": "Футляр",
+          "image": "/sheath_dress.jpg"
+        },
+        {
+          "name": "А-силует",
+          "image": "/a_siluet_dress.jpg"
+        }
+      ],
+      "required_final_details": [
+        "height",
+        "bust",
+        "hips"
+      ]
+    },
     {
       "id": "g-2",
       "name": "Блуза",
       "base_consumption": 1.6,
       "gender": "жіночий",
-      "available_fits":[
-        {"name" : "Класична", "image": "/blouse_classic.jpg"},
-        {"name" : "З бантом",  "image": "/blouse_with_bow.jpg"},
-        {"name" : " Оверсайз",  "image": "/blouse_oversize.jpg"}
-    ],
-      "required_final_details": ["height", "bust"]
+      "available_fits": [
+        {
+          "name": "Класична",
+          "image": "/blouse_classic.jpg"
+        },
+        {
+          "name": "З бантом",
+          "image": "/blouse_with_bow.jpg"
+        },
+        {
+          "name": " Оверсайз",
+          "image": "/blouse_oversize.jpg"
+        }
+      ],
+      "required_final_details": [
+        "height",
+        "bust"
+      ]
     },
     {
       "id": "g-3",
       "name": "Спідниця",
       "base_consumption": 1.2,
       "gender": "жіночий",
-      "available_fits":[
-        {"name" : "Олівець", "image": "/skirt_pen.jpg"},
-        {"name" :"Сонце-кльош",  "image": "/skirt_sunny.jpg"}
+      "available_fits": [
+        {
+          "name": "Олівець",
+          "image": "/skirt_pen.jpg"
+        },
+        {
+          "name": "Сонце-кльош",
+          "image": "/skirt_sunny.jpg"
+        }
       ],
-      "required_final_details": ["height", "bust"]
+      "required_final_details": [
+        "height",
+        "bust"
+      ]
     },
     {
       "id": "g-6",
       "name": "Піджак / Жакет",
       "base_consumption": 2.2,
       "gender": "унісекс",
-      "available_fits":[
-        {"name" : "Класичний", "image": "/jacket_classic.jpg"},
-        {"name" : "Приталений",  "image": "/slim_fit_jacket.jpg"}
+      "available_fits": [
+        {
+          "name": "Класичний",
+          "image": "/jacket_classic.jpg"
+        },
+        {
+          "name": "Приталений",
+          "image": "/slim_fit_jacket.jpg"
+        }
       ],
-      "required_final_details": ["height", "bust"]
+      "required_final_details": [
+        "height",
+        "bust"
+      ]
     },
     {
       "id": "g-7",
       "name": "Штани",
       "base_consumption": 1.4,
       "gender": "унісекс",
-      "available_fits":[
-        {"name" : "Класичні", "image": "/pants_classic.jpg"},
-        {"name" : "Палаццо",  "image": "/pants_palazzo.jpg"}
+      "available_fits": [
+        {
+          "name": "Класичні",
+          "image": "/pants_classic.jpg"
+        },
+        {
+          "name": "Палаццо",
+          "image": "/pants_palazzo.jpg"
+        }
       ],
-      "required_final_details": ["height", "hips"]
+      "required_final_details": [
+        "height",
+        "hips"
+      ]
     },
     {
       "id": "g-8",
       "name": "Сорочка",
       "base_consumption": 1.7,
       "gender": "унісекс",
-      "available_fits":[
-        {"name" : "Класична", "image": "/shirt_classic.jpg"},
-        {"name" : "Оверсайз",  "image": "/shirt_oversize.jpg"}
+      "available_fits": [
+        {
+          "name": "Класична",
+          "image": "/shirt_classic.jpg"
+        },
+        {
+          "name": "Оверсайз",
+          "image": "/shirt_oversize.jpg"
+        }
       ],
-      "required_final_details": ["height", "bust"]
+      "required_final_details": [
+        "height",
+        "bust"
+      ]
     },
     {
       "id": "g-9",
       "name": "Пальто / Тренч",
       "base_consumption": 3.2,
       "gender": "унісекс",
-      "available_fits":[
-        {"name" : "Пряме", "image": "/trench.jpg"},
-        {"name" : "Кокон",  "image": "/trench_cocon.jpg"}
+      "available_fits": [
+        {
+          "name": "Пряме",
+          "image": "/trench.jpg"
+        },
+        {
+          "name": "Кокон",
+          "image": "/trench_cocon.jpg"
+        }
       ],
-      "required_final_details": ["height", "bust"]
+      "required_final_details": [
+        "height",
+        "bust"
+      ]
+    },
+    {
+      "id": "e20aa263-1f91-4c02-b644-064a46472a5e",
+      "name": "Вечірня сукня",
+      "base_consumption": 3,
+      "gender": "жіночий",
+      "available_fits": [
+        "Ампір",
+        "Рибка"
+      ],
+      "required_final_details": [
+        "height",
+        "bust",
+        "hips"
+      ]
     }
   ],
   "materials": [
-    { "id": "mat-1", "name": "Бавовна", "price_per_meter": 300, "properties": [{ "key": "сезон", "value": "літо" }, { "key": "стиль", "value": "повсякденний" }, {"key": "складність", "value": "низька"}, {"key": "еластичність", "value": "ні"}] },
-    { "id": "mat-2", "name": "Джерсі (трикотаж)", "price_per_meter": 450, "properties": [{"key": "сезон", "value": "демісезон"}, {"key": "стиль", "value": "спортивний"}, {"key": "складність", "value": "середня"}, {"key": "еластичність", "value": "так"}]},
-    { "id": "mat-3", "name": "Вовна костюмна", "price_per_meter": 700, "properties": [{ "key": "сезон", "value": "демісезон" }, { "key": "стиль", "value": "діловий" }, {"key": "складність", "value": "середня"}, {"key": "еластичність", "value": "ні"}] },
-    { "id": "mat-4", "name": "Кашемір", "price_per_meter": 1500, "properties": [{ "key": "сезон", "value": "зима" }, { "key": "стиль", "value": "діловий" }, {"key": "складність", "value": "висока"}, {"key": "еластичність", "value": "ні"}] },
-    { "id": "mat-5", "name": "Шовк", "price_per_meter": 1200, "properties": [{ "key": "сезон", "value": "літо" }, { "key": "стиль", "value": "вечірній" }, {"key": "складність", "value": "висока"}, {"key": "еластичність", "value": "ні"}] }
+    {
+      "id": "mat-1",
+      "name": "Бавовна",
+      "price_per_meter": 300,
+      "properties": [
+        {
+          "key": "сезон",
+          "value": "літо"
+        },
+        {
+          "key": "стиль",
+          "value": "повсякденний"
+        },
+        {
+          "key": "складність",
+          "value": "низька"
+        },
+        {
+          "key": "еластичність",
+          "value": "ні"
+        }
+      ]
+    },
+    {
+      "id": "mat-2",
+      "name": "Джерсі (трикотаж)",
+      "price_per_meter": 450,
+      "properties": [
+        {
+          "key": "сезон",
+          "value": "демісезон"
+        },
+        {
+          "key": "стиль",
+          "value": "спортивний"
+        },
+        {
+          "key": "складність",
+          "value": "середня"
+        },
+        {
+          "key": "еластичність",
+          "value": "так"
+        }
+      ]
+    },
+    {
+      "id": "mat-3",
+      "name": "Вовна костюмна",
+      "price_per_meter": 700,
+      "properties": [
+        {
+          "key": "сезон",
+          "value": "демісезон"
+        },
+        {
+          "key": "стиль",
+          "value": "діловий"
+        },
+        {
+          "key": "складність",
+          "value": "середня"
+        },
+        {
+          "key": "еластичність",
+          "value": "ні"
+        }
+      ]
+    },
+    {
+      "id": "mat-4",
+      "name": "Кашемір",
+      "price_per_meter": 1500,
+      "properties": [
+        {
+          "key": "сезон",
+          "value": "зима"
+        },
+        {
+          "key": "стиль",
+          "value": "діловий"
+        },
+        {
+          "key": "складність",
+          "value": "висока"
+        },
+        {
+          "key": "еластичність",
+          "value": "ні"
+        }
+      ]
+    },
+    {
+      "id": "mat-5",
+      "name": "Шовк",
+      "price_per_meter": 1200,
+      "properties": [
+        {
+          "key": "сезон",
+          "value": "літо"
+        },
+        {
+          "key": "стиль",
+          "value": "вечірній"
+        },
+        {
+          "key": "складність",
+          "value": "висока"
+        },
+        {
+          "key": "еластичність",
+          "value": "ні"
+        }
+      ]
+    }
   ],
   "calculation_rules": [
-    { "id": "rule-1", "description": "Надбавка за високий зріст", "factor": "height", "operator": ">", "value": 175, "modifier": 1.15 },
-    { "id": "rule-2", "description": "Збільшення для 'Сонце-кльош'", "factor": "fit", "operator": "===", "value": "Сонце-кльош", "modifier": 1.8 },
-    { "id": "rule-bust-1", "description": "Надбавка на обхват грудей", "factor": "bust", "operator": ">", "value": 100, "modifier": 1.2 },
-    { "id": "rule-hips-1", "description": "Надбавка на обхват стегон", "factor": "hips", "operator": ">", "value": 110, "modifier": 1.2 },
-    { "id": "rule-sleeve-1", "description": "Надбавка за довгий рукав", "factor": "sleeve", "operator": "===", "value": "довгий", "modifier": 1.25 },
-    { "id": "rule-print-1", "description": "Надбавка за суміщення візерунку", "factor": "print_matching", "operator": "===", "value": "так", "modifier": 1.15 },
-    { "id": "rule-complex-elements-1", "description": "Надбавка за складні елементи", "factor": "has_complex_elements", "operator": "===", "value": "так", "modifier": 1.1 }
+    {
+      "id": "rule-1",
+      "description": "Надбавка за високий зріст",
+      "factor": "height",
+      "operator": ">",
+      "value": 175,
+      "modifier": 1.15
+    },
+    {
+      "id": "rule-2",
+      "description": "Збільшення для 'Сонце-кльош'",
+      "factor": "fit",
+      "operator": "===",
+      "value": "Сонце-кльош",
+      "modifier": 1.8
+    },
+    {
+      "id": "rule-bust-1",
+      "description": "Надбавка на обхват грудей",
+      "factor": "bust",
+      "operator": ">",
+      "value": 100,
+      "modifier": 1.2
+    },
+    {
+      "id": "rule-hips-1",
+      "description": "Надбавка на обхват стегон",
+      "factor": "hips",
+      "operator": ">",
+      "value": 110,
+      "modifier": 1.2
+    },
+    {
+      "id": "rule-sleeve-1",
+      "description": "Надбавка за довгий рукав",
+      "factor": "sleeve",
+      "operator": "===",
+      "value": "довгий",
+      "modifier": 1.25
+    },
+    {
+      "id": "rule-print-1",
+      "description": "Надбавка за суміщення візерунку",
+      "factor": "print_matching",
+      "operator": "===",
+      "value": "так",
+      "modifier": 1.15
+    },
+    {
+      "id": "rule-complex-elements-1",
+      "description": "Надбавка за складні елементи",
+      "factor": "has_complex_elements",
+      "operator": "===",
+      "value": "так",
+      "modifier": 1.1
+    },
+    {
+      "id": "41d159ac-aaf0-4d8c-b5b2-be49504548ee",
+      "description": "За довжину",
+      "factor": "length",
+      "operator": ">",
+      "value": "максі",
+      "modifier": 1.5
+    }
   ]
 }

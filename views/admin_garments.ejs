@@ -58,14 +58,7 @@
                 <td><%= g.name %></td>
                 <td><%= g.base_consumption %> м</td>
                 <td><%= g.gender %></td>
-                <td><%= (g.available_fits || []).join(', ') %></td>
-                <td><%= (g.required_final_details || []).join(', ') %></td>
-                <td>
-                    <form action="/admin/garments/delete/<%= g.id %>" method="POST" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm">Видалити</button>
-                    </form>
-                </td>
-                <td><%= (g.available_fits || []).map(f => f.name).join(', ') %></td>
+                <td><%= (g.available_fits || []).map(f => f.name || f).join(', ') %></td>
                 <td><%= (g.required_final_details || []).join(', ') %></td>
                 <td>
                     <a href="/admin/garments/edit/<%= g.id %>" class="btn btn-primary btn-sm">Редагувати</a>
